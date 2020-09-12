@@ -36,8 +36,8 @@ class _HomeState extends State<Home> {
       value: UserDatabaseService().users,
       child: Scaffold(
         appBar: AppBar(
-//          backgroundColor: Colors.pinkAccent,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.pinkAccent,
+//          backgroundColor: Colors.white,
           title: Text(
             titles[_page],
             style: TextStyle(color: Colors.white),
@@ -47,8 +47,8 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.all(8.0),
               child: FlatButton.icon(
                 icon: Icon(Icons.exit_to_app),
-//                color: Colors.pinkAccent[200],
-                color: Colors.white,
+                color: Colors.pinkAccent[200],
+//                color: Colors.white,
                 label: Text(' '),
                 onPressed: () async {
                   await _auth.signOut();
@@ -61,8 +61,8 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: CurvedNavigationBar(
           index: _page,
           backgroundColor: Colors.white,
-//          color: Colors.pinkAccent,
-          color: Colors.white,
+          color: Colors.pinkAccent,
+//          color: Colors.white,
           items: <Widget>[
             Icon(
               Icons.dashboard,
