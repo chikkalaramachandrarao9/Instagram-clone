@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "327446029950",
+    "firebase_url": "https://instagram-clone-997d4.firebaseio.com",
+    "project_id": "instagram-clone-997d4",
+    "storage_bucket": "instagram-clone-997d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327446029950:android:2ecaba1494c09c737eda2f",
+        "android_client_info": {
+          "package_name": "com.sanjayram.insta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327446029950-ipgdclm37a8rtdn1og42gditjpnk0l31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPLrtY733V-qDrK0ENMdEYDxqH4uJWv7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327446029950-ipgdclm37a8rtdn1og42gditjpnk0l31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
