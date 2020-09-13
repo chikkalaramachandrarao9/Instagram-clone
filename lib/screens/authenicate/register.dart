@@ -73,7 +73,7 @@ class _RegisterState extends State<Register> {
                               filled: true,
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Colors.pink, width: 2.0),
+                                    BorderSide(color: Colors.lime, width: 2.0),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
@@ -97,7 +97,7 @@ class _RegisterState extends State<Register> {
                               filled: true,
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Colors.pink, width: 2.0),
+                                    BorderSide(color: Colors.lime, width: 2.0),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
@@ -112,10 +112,10 @@ class _RegisterState extends State<Register> {
                         ),
                         SizedBox(height: 20.0),
                         RaisedButton(
-                            color: Colors.pink[400],
+                            color: Colors.lime[400],
                             child: Text(
                               'Register',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black),
                             ),
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {

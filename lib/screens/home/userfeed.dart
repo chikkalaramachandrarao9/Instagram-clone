@@ -26,7 +26,7 @@ class _FeedState extends State<Feed> {
 
     // TODO: implement build
     return StreamBuilder<List<Follower>>(
-        stream: _followdatabase.followers,
+        stream: _followdatabase.following,
         builder: (context, snapshot) {
           List<Follower> _followlist = snapshot.data;
           List<String> _following = [];
@@ -61,7 +61,7 @@ class _FeedState extends State<Feed> {
                       itemCount: entries.length,
                       itemBuilder: (BuildContext context, int index) {
                         return PostCard(entries[index].url, entries[index].uid,
-                            entries[index].tag);
+                            entries[index].tag, entries[index].docid);
                       },
                     );
                   } else {

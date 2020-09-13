@@ -38,8 +38,8 @@ class _YourPostsDisplayState extends State<YourPostsDisplay> {
                 padding: const EdgeInsets.all(8),
                 itemCount: entries.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return PostCard(
-                      entries[index].url, user.uid, entries[index].tag);
+                  return PostCard(entries[index].url, user.uid,
+                      entries[index].tag, entries[index].docid);
                 },
               ),
             );

@@ -1,26 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:insta/models/Like.dart';
+import 'package:insta/models/user.dart';
 import 'package:insta/models/userdetails.dart';
+import 'package:insta/screens/shared/comment_screen.dart';
 import 'package:insta/services/database/user_database.dart';
+import 'package:insta/services/database/likedatabase.dart';
+import 'package:provider/provider.dart';
 
 class PostCard extends StatefulWidget {
   final String picurl;
   final String uid;
   final String tag;
+  final String postId;
 
-  PostCard(this.picurl, this.uid, this.tag);
+  PostCard(this.picurl, this.uid, this.tag, this.postId);
 
   @override
   _PostCardState createState() => _PostCardState();
 }
 
 class _PostCardState extends State<PostCard> {
-  bool isPressed = false;
+  bool isLiked = false;
 
   @override
   Widget build(BuildContext context) {
     UserDatabaseService _userdatabaseService =
         UserDatabaseService(uid: widget.uid);
+    final user = Provider.of<UserDetails>(context);
+    LikeDatabaseService _likedatabaseService =
+        LikeDatabaseService(widget.postId, user.uid);
+
+    List<Like> temp;
+    int likes = 0;
 
     // TODO: implement build
     return StreamBuilder<UserProfileWithUid>(
@@ -51,11 +63,12 @@ class _PostCardState extends State<PostCard> {
                         ),
                         Text(
                           user.name,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontFamily: 'kalam'),
                         )
                       ],
                     ),
-                    new IconButton(
+                    IconButton(
                       icon: Icon(Icons.more_vert),
                       onPressed: null,
                     )
@@ -73,14 +86,71 @@ class _PostCardState extends State<PostCard> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 16.0, 8.0, 16.0),
-                child: Icon(
-                  Icons.favorite_border,
-                  color: Colors.pinkAccent,
-                  size: 30.0,
-                ),
-              )
+              StreamBuilder<List<Like>>(
+                  stream: _likedatabaseService.isliked,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      temp = snapshot.data;
+                      if (temp.length != 0) {
+                        isLiked = true;
+                      } else {
+                        isLiked = false;
+                      }
+                    }
+                    return Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20.0, 16.0, 8.0, 16.0),
+                          child: isLiked
+                              ? IconButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLiked = false;
+                                    });
+                                    await _likedatabaseService
+                                        .deleteLike(temp[0].docId);
+                                  },
+                                  icon: Icon(Icons.favorite),
+                                  color: Colors.pinkAccent,
+                                  iconSize: 30.0,
+                                )
+                              : IconButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLiked = true;
+                                    });
+                                    await _likedatabaseService.updateLikeData();
+                                  },
+                                  icon: Icon(Icons.favorite_border),
+                                  color: Colors.pinkAccent,
+                                  iconSize: 30.0,
+                                ),
+                        ),
+                        StreamBuilder<List<Like>>(
+                            stream: _likedatabaseService.noOfLikes,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                likes = snapshot.data.length;
+                              }
+                              return Text(likes.toString());
+                            }),
+                        SizedBox(
+                          width: 100.0,
+                        ),
+                        FlatButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CommentScreen(widget.postId)),
+                              );
+                            },
+                            icon: Icon(Icons.message),
+                            label: Text('Comment'))
+                      ],
+                    );
+                  })
             ],
           );
         });

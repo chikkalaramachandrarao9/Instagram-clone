@@ -27,6 +27,37 @@ class _HomeState extends State<Home> {
     "Your Profile",
   ];
 
+  List<Widget> _titles = [
+    Text(
+      'Instagram',
+      style: TextStyle(
+        color: Colors.black,
+        fontFamily: 'DancingScript',
+        fontSize: 30.0,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+    Text(''),
+    Text(
+      'Post',
+      style: TextStyle(
+        color: Colors.black,
+        fontFamily: 'DancingScript',
+        fontSize: 30.0,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+    Text(
+      'Me',
+      style: TextStyle(
+        color: Colors.black,
+        fontFamily: 'DancingScript',
+        fontSize: 30.0,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  ];
+
   List<Widget> _list = [Feed(), Search(), Post(), YourProfile()];
 
   @override
@@ -36,18 +67,15 @@ class _HomeState extends State<Home> {
       value: UserDatabaseService().users,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.pinkAccent,
+          backgroundColor: Colors.limeAccent,
 //          backgroundColor: Colors.white,
-          title: Text(
-            titles[_page],
-            style: TextStyle(color: Colors.white),
-          ),
+          title: _titles[_page],
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FlatButton.icon(
                 icon: Icon(Icons.exit_to_app),
-                color: Colors.pinkAccent[200],
+                color: Colors.limeAccent,
 //                color: Colors.white,
                 label: Text(' '),
                 onPressed: () async {
@@ -61,28 +89,28 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: CurvedNavigationBar(
           index: _page,
           backgroundColor: Colors.white,
-          color: Colors.pinkAccent,
+          color: Colors.limeAccent,
 //          color: Colors.white,
           items: <Widget>[
             Icon(
               Icons.dashboard,
               size: 30,
-              color: Colors.white,
+              color: Colors.black,
             ),
             Icon(
               Icons.search,
               size: 30,
-              color: Colors.white,
+              color: Colors.black,
             ),
             Icon(
               Icons.add,
               size: 30,
-              color: Colors.white,
+              color: Colors.black,
             ),
             Icon(
               Icons.perm_identity,
               size: 30,
-              color: Colors.white,
+              color: Colors.black,
             ),
           ],
           animationCurve: Curves.easeInOut,

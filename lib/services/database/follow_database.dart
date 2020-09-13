@@ -3,15 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:insta/models/follower.dart';
 
 class FollowerDatabaseService {
-   String followeruid;
-   String followinguid;
+  String followeruid;
+  String followinguid;
 
   FollowerDatabaseService(this.followeruid, this.followinguid);
 
+  FollowerDatabaseService.follow(this.followeruid);
 
-   FollowerDatabaseService.follow(this.followeruid);
-
-   final CollectionReference followerCollection =
+  final CollectionReference followerCollection =
       FirebaseFirestore.instance.collection('followers');
 
   Future updateUserData() async {
@@ -44,10 +43,17 @@ class FollowerDatabaseService {
         .map(_followData);
   }
 
-  Stream<List<Follower>> get followers{
-  return followerCollection
-      .where('followeruid', isEqualTo: followeruid)
-      .snapshots()
-      .map(_followData);
+  Stream<List<Follower>> get following {
+    return followerCollection
+        .where('followeruid', isEqualTo: followeruid)
+        .snapshots()
+        .map(_followData);
+  }
+
+  Stream<List<Follower>> get followers {
+    return followerCollection
+        .where('followinguid', isEqualTo: followeruid)
+        .snapshots()
+        .map(_followData);
   }
 }

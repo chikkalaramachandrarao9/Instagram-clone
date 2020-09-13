@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:insta/models/user.dart';
 import 'package:insta/services/database/postdatabase.dart';
 import 'package:provider/provider.dart';
+import 'package:insta/screens/shared/loading.dart';
 
 class Post extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class Post extends StatefulWidget {
 
 class _PostState extends State<Post> {
   File _imageFile;
+  bool loading = false;
 
   String url = "";
   String _uploadFileName = "";
@@ -32,7 +34,6 @@ class _PostState extends State<Post> {
     print('success');
   }
 
-  /// Cropper plugin
 //  Future<void> _cropImage() async {
 //    print('cropper');
 //    File cropped = await ImageCropper.cropImage(
@@ -74,91 +75,108 @@ class _PostState extends State<Post> {
     PostDatabaseService _databaseService = PostDatabaseService(uid: user.uid);
 
     // TODO: implement build
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-              color: Colors.blueGrey,
-              icon: Icon(
-                Icons.photo_camera,
-                size: 50.0,
+    return loading
+        ? spinkit3
+        : Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  IconButton(
+                    color: Colors.blueGrey,
+                    icon: Icon(
+                      Icons.photo_camera,
+                      size: 50.0,
+                    ),
+                    onPressed: () => _pickImage(ImageSource.camera),
+                  ),
+                  IconButton(
+                    color: Colors.blueGrey,
+                    icon: Icon(
+                      Icons.photo_library,
+                      size: 50.0,
+                    ),
+                    onPressed: () => _pickImage(ImageSource.gallery),
+                  ),
+                ],
               ),
-              onPressed: () => _pickImage(ImageSource.camera),
-            ),
-            IconButton(
-              color: Colors.blueGrey,
-              icon: Icon(
-                Icons.photo_library,
-                size: 50.0,
+              SizedBox(
+                height: 20.0,
               ),
-              onPressed: () => _pickImage(ImageSource.gallery),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
-        _imageFile != null
-            ? Container(
-                color: Colors.grey[200],
-                height: 300.0,
-                child: Image.file(_imageFile))
-            : Container(
-                color: Colors.grey[200],
-                height: 150.0,
-                child: Center(
-                    child: Text('Click the above icons to choose image!')),
-              ),
-        Row(
-          children: <Widget>[
-            SizedBox(
-              width: 50.0,
-            ),
-            FlatButton(
-              child: Icon(Icons.crop),
+              _imageFile != null
+                  ? Container(
+                      color: Colors.grey[200],
+                      height: 300.0,
+                      child: Image.file(_imageFile))
+                  : Container(
+                      color: Colors.grey[200],
+                      height: 150.0,
+                      child: Center(
+                          child:
+                              Text('Click the above icons to choose image!')),
+                    ),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 50.0,
+                  ),
+                  FlatButton(
+                    child: Icon(Icons.crop),
 //              onPressed: _cropImage,
-              onPressed: () {},
-            ),
-            SizedBox(
-              width: 50.0,
-            ),
-            FlatButton(
-              child: Icon(Icons.refresh),
-              onPressed: _clear,
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: tagcontroller,
-            decoration: InputDecoration(
-              hintText: 'Write about this!',
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
-              filled: true,
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.pink, width: 2.0),
-                borderRadius: BorderRadius.circular(5.0),
+                    onPressed: () {},
+                  ),
+                  SizedBox(
+                    width: 50.0,
+                  ),
+                  FlatButton(
+                    child: Icon(Icons.clear),
+                    onPressed: _clear,
+                  ),
+                ],
               ),
-            ),
-          ),
-        ),
-        RaisedButton(
-          child: Text('Post'),
-          onPressed: () async {
-            await _uploadFile(_imageFile, _uploadFileName);
+              SizedBox(
+                height: 20.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: tagcontroller,
+                  decoration: InputDecoration(
+                    hintText: 'Write about this!',
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.black, width: 1.0)),
+                    filled: true,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.lime, width: 2.0),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                ),
+              ),
+              RaisedButton(
+                child: Text('Post'),
+                onPressed: () async {
+                  setState(() {
+                    loading = true;
+                  });
+                  await _uploadFile(_imageFile, _uploadFileName);
 
-            await _databaseService.updateUserData(tagcontroller.text, url);
-          },
-        )
-      ],
-    );
+                  await _databaseService.updateUserData(
+                      tagcontroller.text, url);
+                  _clear();
+                  tagcontroller.text = '';
+                  setState(() {
+                    loading = false;
+                  });
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text('Saved Successfully'),
+                    duration: Duration(seconds: 3),
+                  ));
+                },
+              ),
+            ],
+          );
   }
 }
