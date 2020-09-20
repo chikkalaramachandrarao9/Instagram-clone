@@ -24,10 +24,14 @@ class _RegisterState extends State<Register> {
 
   String password = '';
 
+  String profileName = '';
+  String aboutYou = '';
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -53,7 +57,12 @@ class _RegisterState extends State<Register> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  child: Image.asset('images/logo.jpg'),
+                  height: 200,
+                  width: 200,
+                  child: Image.asset(
+                    'images/logo.png',
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 Container(
                   child: Form(
@@ -84,7 +93,7 @@ class _RegisterState extends State<Register> {
                             },
                           ),
                         ),
-                        SizedBox(height: 20.0),
+                        SizedBox(height: 10.0),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
@@ -110,9 +119,56 @@ class _RegisterState extends State<Register> {
                             },
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'Profile Name',
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.0)),
+                              filled: true,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.lime, width: 2.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                            ),
+                            validator: (val) =>
+                                val.isEmpty ? 'Enter profile name' : null,
+                            onChanged: (val) {
+                              setState(() => profileName = val);
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'About You in a short sentence',
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.0)),
+                              filled: true,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.lime, width: 2.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                            ),
+                            validator: (val) =>
+                                val.isEmpty ? 'Fill this field' : null,
+                            onChanged: (val) {
+                              setState(() => aboutYou = val);
+                            },
+                          ),
+                        ),
                         SizedBox(height: 20.0),
                         RaisedButton(
-                            color: Colors.lime[400],
+                            color: Color.fromARGB(255, 248, 90, 44),
                             child: Text(
                               'Register',
                               style: TextStyle(color: Colors.black),
@@ -122,8 +178,8 @@ class _RegisterState extends State<Register> {
                                 setState(() {
                                   _loading = true;
                                 });
-                                dynamic result =
-                                    await _auth.register(email, password);
+                                dynamic result = await _auth.register(
+                                    email, password, profileName, aboutYou);
                                 if (result == null) {
                                   setState(() {
                                     _loading = false;

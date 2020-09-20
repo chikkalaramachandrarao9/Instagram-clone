@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:insta/models/user.dart';
 import 'package:insta/models/userdetails.dart';
-import 'package:insta/screens/home/profile.dart';
+import 'package:insta/screens/messaging/chat_screen.dart';
 import 'package:provider/provider.dart';
 
-class UserSearch extends SearchDelegate {
+class MessageSearch extends SearchDelegate {
   List<UserProfileWithUid> suggestionlist;
 
   final List<UserProfileWithUid> _list;
   int ind = 0;
-  UserSearch(this._list);
+  MessageSearch(this._list);
 
   List<UserProfileWithUid> suggestion(String q) {
     List<UserProfileWithUid> ans = [];
@@ -53,7 +54,15 @@ class UserSearch extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
+
     bool dark = Provider.of<bool>(context);
+    final user = Provider.of<UserDetails>(context);
+
+    List<String> searchElements = [];
+
+    for (int i = 0; i < _list.length; i++) {
+      searchElements.add(_list[i].name);
+    }
 
     suggestionlist = query.isEmpty ? _list : suggestion(query);
 
@@ -66,13 +75,16 @@ class UserSearch extends SearchDelegate {
             suggestionlist[index].name,
             style: TextStyle(color: dark ? Colors.white : Colors.black),
           ),
-          onTap: () {
+          onTap: () async {
             ind = index;
 //          showResults(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (BuildContext context) {
-              return Profile(suggestionlist[index].uid);
-            }));
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChatScreen(
+                          uid: suggestionlist[index].uid,
+                        )));
           },
           leading: CircleAvatar(
             backgroundImage: NetworkImage(suggestionlist[index].dpurl),

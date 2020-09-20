@@ -4,11 +4,15 @@ import 'package:insta/models/follower.dart';
 import 'package:insta/models/post_model.dart';
 import 'package:insta/models/user.dart';
 import 'package:insta/models/userdetails.dart';
+import 'package:insta/screens/messaging/chat_screen.dart';
+import 'package:insta/screens/shared/followers.dart';
+import 'package:insta/screens/shared/following_page.dart';
 import 'package:insta/screens/shared/loading.dart';
 import 'package:insta/services/database/postdatabase.dart';
 import 'package:insta/services/database/user_database.dart';
 import 'package:insta/services/database/follow_database.dart';
 import 'package:provider/provider.dart';
+import 'package:insta/services/database/notification_database.dart';
 
 class ProfileHead extends StatefulWidget {
   final String uid;
@@ -21,10 +25,22 @@ class ProfileHead extends StatefulWidget {
 
 class _ProfileHeadState extends State<ProfileHead> {
   bool _isfollowing = false;
+  bool dark;
+
+  followerPage(String id) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => FollowersPage(id)));
+  }
+
+  followingPage(String id) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => FollowingPage(id)));
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserDetails>(context);
+    dark = Provider.of<bool>(context);
 
     FollowerDatabaseService _followerdatabaseService =
         FollowerDatabaseService(user.uid, widget.uid);
@@ -76,20 +92,23 @@ class _ProfileHeadState extends State<ProfileHead> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
-                                      25.0, 5.0, 20.0, 5.0),
+                                      20.0, 5.0, 20.0, 5.0),
                                   child: Column(
                                     children: <Widget>[
                                       Row(
                                         children: <Widget>[
                                           SizedBox(
-                                            width: 15.0,
+                                            width: 10.0,
                                           ),
                                           Text(noOfPosts.toString(),
                                               style: TextStyle(
+                                                  color: dark
+                                                      ? Colors.white54
+                                                      : Colors.black,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 30.0)),
                                           SizedBox(
-                                            width: 55.0,
+                                            width: 50.0,
                                           ),
                                           StreamBuilder<List<Follower>>(
                                               stream:
@@ -98,15 +117,23 @@ class _ProfileHeadState extends State<ProfileHead> {
                                                 if (snapshot.hasData)
                                                   noOfFollowers =
                                                       snapshot.data.length;
-                                                return Text(
-                                                    noOfFollowers.toString(),
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 30.0));
+                                                return InkWell(
+                                                  onTap: () {
+                                                    followerPage(widget.uid);
+                                                  },
+                                                  child: Text(
+                                                      noOfFollowers.toString(),
+                                                      style: TextStyle(
+                                                          color: dark
+                                                              ? Colors.white54
+                                                              : Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 30.0)),
+                                                );
                                               }),
                                           SizedBox(
-                                            width: 55.0,
+                                            width: 50.0,
                                           ),
                                           StreamBuilder<List<Follower>>(
                                               stream:
@@ -115,12 +142,20 @@ class _ProfileHeadState extends State<ProfileHead> {
                                                 if (snapshot.hasData)
                                                   following =
                                                       snapshot.data.length;
-                                                return Text(
-                                                    following.toString(),
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 30.0));
+                                                return InkWell(
+                                                  onTap: () {
+                                                    followingPage(widget.uid);
+                                                  },
+                                                  child: Text(
+                                                      following.toString(),
+                                                      style: TextStyle(
+                                                          color: dark
+                                                              ? Colors.white54
+                                                              : Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 30.0)),
+                                                );
                                               }),
                                         ],
                                       ),
@@ -131,22 +166,41 @@ class _ProfileHeadState extends State<ProfileHead> {
                                         children: <Widget>[
                                           Text('Posts',
                                               style: TextStyle(
+                                                  color: dark
+                                                      ? Colors.white54
+                                                      : Colors.black,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 12.0)),
                                           SizedBox(
                                             width: 20.0,
                                           ),
-                                          Text('Followers',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12.0)),
+                                          InkWell(
+                                            child: Text('Followers',
+                                                style: TextStyle(
+                                                    color: dark
+                                                        ? Colors.white54
+                                                        : Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12.0)),
+                                            onTap: () {
+                                              followerPage(widget.uid);
+                                            },
+                                          ),
                                           SizedBox(
                                             width: 20.0,
                                           ),
-                                          Text('Following',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12.0)),
+                                          InkWell(
+                                            child: Text('Following',
+                                                style: TextStyle(
+                                                    color: dark
+                                                        ? Colors.white54
+                                                        : Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12.0)),
+                                            onTap: () {
+                                              followingPage(widget.uid);
+                                            },
+                                          ),
                                         ],
                                       )
                                     ],
@@ -163,6 +217,8 @@ class _ProfileHeadState extends State<ProfileHead> {
                           Text(
                             details.name,
                             style: TextStyle(
+                              fontFamily: 'kalam',
+                              color: dark ? Colors.white : Colors.black,
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                             ),
@@ -177,6 +233,7 @@ class _ProfileHeadState extends State<ProfileHead> {
                           Text(
                             details.aboutMe,
                             style: TextStyle(
+                              color: dark ? Colors.white54 : Colors.black,
                               fontSize: 10.0,
                             ),
                           ),
@@ -185,31 +242,62 @@ class _ProfileHeadState extends State<ProfileHead> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      Container(
-                        child: _isfollowing
-                            ? FlatButton(
-                                child: Text('Following'),
-                                color: Colors.grey[200],
-                                onPressed: () async {
-                                  setState(() {
-                                    _isfollowing = false;
-                                  });
-                                  _followerdatabaseService
-                                      .deleteUser(doc[0].docid);
-                                },
-                              )
-                            : FlatButton(
-                                child: Text('Follow'),
-                                color: Colors.lightBlue,
-                                onPressed: () async {
-                                  setState(() {
-                                    _isfollowing = true;
-                                  });
-                                  await _followerdatabaseService
-                                      .updateUserData();
-                                },
-                              ),
-                      ),
+                      widget.uid != user.uid
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                FlatButton(
+                                  child: Text('Message'),
+                                  color: Color.fromARGB(255, 248, 90, 44),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatScreen(
+                                            uid: widget.uid,
+                                          ),
+                                        ));
+                                  },
+                                ),
+                                Container(
+                                  child: _isfollowing
+                                      ? FlatButton(
+                                          child: Text('Following'),
+                                          color: Colors.grey[200],
+                                          onPressed: () async {
+                                            setState(() {
+                                              _isfollowing = false;
+                                            });
+                                            _followerdatabaseService
+                                                .deleteUser(doc[0].docid);
+                                          },
+                                        )
+                                      : FlatButton(
+                                          child: Text(
+                                            'Follow',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          color:
+                                              Color.fromARGB(255, 248, 90, 44),
+                                          onPressed: () async {
+                                            setState(() {
+                                              _isfollowing = true;
+                                            });
+                                            await _followerdatabaseService
+                                                .updateUserData();
+                                            await NotificationDatabaseService(
+                                                    widget.uid)
+                                                .updateNotification(
+                                                    'started following you.',
+                                                    user.uid,
+                                                    'follow');
+                                          },
+                                        ),
+                                ),
+                              ],
+                            )
+                          : Container(),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 25.0, 0, 15.0),
                         child: Container(

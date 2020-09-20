@@ -25,13 +25,13 @@ class AuthService {
 //    }
 //  }
 
-  Future register(String email, String password) async {
+  Future register(String email, String password,String pName,String aboutMe) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
 
-      await UserDatabaseService(uid: user.uid).updateUserData(email, "",
+      await UserDatabaseService(uid: user.uid).updateUserData(pName,aboutMe,
           "https://images.unsplash.com/photo-1518707606293-6274eadcf07d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&q=60");
       return _userFromFirebaseUser(user);
     } catch (e) {

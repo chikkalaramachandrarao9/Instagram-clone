@@ -27,6 +27,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -52,7 +53,12 @@ class _SignInState extends State<SignIn> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  child: Image.asset('images/logo.jpg'),
+                  height: 200,
+                  width: 200,
+                  child: Image.asset(
+                    'images/logo.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Container(
                   child: Form(
@@ -111,7 +117,7 @@ class _SignInState extends State<SignIn> {
                         ),
                         SizedBox(height: 20.0),
                         RaisedButton(
-                            color: Colors.lime,
+                            color: Color.fromARGB(255, 248, 90, 44),
                             child: Text(
                               'Sign In',
                               style: TextStyle(color: Colors.black),

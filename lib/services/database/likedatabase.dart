@@ -32,6 +32,13 @@ class LikeDatabaseService {
     }).toList();
   }
 
+  Stream<List<Like>> get likers {
+    return likeCollection
+        .where('postid', isEqualTo: postId)
+        .snapshots()
+        .map(_likeData);
+  }
+
   Stream<List<Like>> get isliked {
     return likeCollection
         .where('postid', isEqualTo: postId)

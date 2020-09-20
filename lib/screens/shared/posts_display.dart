@@ -39,8 +39,12 @@ class _PostsDisplayState extends State<PostsDisplay> {
                 padding: const EdgeInsets.all(8),
                 itemCount: entries.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return PostCard(entries[index].url, widget.uid,
-                      entries[index].tag, entries[index].docid);
+                  return PostCard(
+                      entries[index].url,
+                      widget.uid,
+                      entries[index].tag,
+                      entries[index].docid,
+                      entries[index].refid);
                 },
               ),
             );

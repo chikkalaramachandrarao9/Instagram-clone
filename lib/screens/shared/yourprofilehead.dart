@@ -5,6 +5,8 @@ import 'package:insta/models/post_model.dart';
 import 'package:insta/models/user.dart';
 import 'package:insta/models/userdetails.dart';
 import 'package:insta/screens/home/about_me.dart';
+import 'package:insta/screens/shared/followers.dart';
+import 'package:insta/screens/shared/following_page.dart';
 import 'package:insta/services/database/follow_database.dart';
 import 'package:insta/services/database/postdatabase.dart';
 import 'package:insta/services/database/user_database.dart';
@@ -17,6 +19,8 @@ class YourProfileHead extends StatefulWidget {
 }
 
 class _YourProfileHeadState extends State<YourProfileHead> {
+  bool dark;
+
   int noOfPosts = 0;
   int noOfFollowers = 0;
   int following = 0;
@@ -29,6 +33,8 @@ class _YourProfileHeadState extends State<YourProfileHead> {
         FollowerDatabaseService.follow(user.uid);
     PostDatabaseService postDatabaseService =
         PostDatabaseService(uid: user.uid);
+
+    dark = Provider.of<bool>(context);
 
     return StreamBuilder<UserProfileWithUid>(
         stream: UserDatabaseService(uid: user.uid).userData,
@@ -53,20 +59,23 @@ class _YourProfileHeadState extends State<YourProfileHead> {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.fromLTRB(25.0, 5.0, 20.0, 5.0),
+                                const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
                             child: Column(
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
                                     SizedBox(
-                                      width: 15.0,
+                                      width: 10.0,
                                     ),
                                     Text(noOfPosts.toString(),
                                         style: TextStyle(
+                                            color: dark
+                                                ? Colors.white54
+                                                : Colors.black,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 30.0)),
                                     SizedBox(
-                                      width: 55.0,
+                                      width: 50.0,
                                     ),
                                     StreamBuilder<List<Follower>>(
                                         stream: _userstatsService.followers,
@@ -74,23 +83,52 @@ class _YourProfileHeadState extends State<YourProfileHead> {
                                           if (snapshot.hasData)
                                             noOfFollowers =
                                                 snapshot.data.length;
-                                          return Text(noOfFollowers.toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 30.0));
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        FollowersPage(
+                                                            user.uid)),
+                                              );
+                                            },
+                                            child: Text(
+                                                noOfFollowers.toString(),
+                                                style: TextStyle(
+                                                    color: dark
+                                                        ? Colors.white54
+                                                        : Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 30.0)),
+                                          );
                                         }),
                                     SizedBox(
-                                      width: 55.0,
+                                      width: 50.0,
                                     ),
                                     StreamBuilder<List<Follower>>(
                                         stream: _userstatsService.following,
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData)
                                             following = snapshot.data.length;
-                                          return Text(following.toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 30.0));
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        FollowingPage(
+                                                            user.uid)),
+                                              );
+                                            },
+                                            child: Text(following.toString(),
+                                                style: TextStyle(
+                                                    color: dark
+                                                        ? Colors.white54
+                                                        : Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 30.0)),
+                                          );
                                         }),
                                   ],
                                 ),
@@ -101,22 +139,51 @@ class _YourProfileHeadState extends State<YourProfileHead> {
                                   children: <Widget>[
                                     Text('Posts',
                                         style: TextStyle(
+                                            color: dark
+                                                ? Colors.white54
+                                                : Colors.black,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12.0)),
                                     SizedBox(
                                       width: 20.0,
                                     ),
-                                    Text('Followers',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12.0)),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FollowersPage(user.uid)),
+                                        );
+                                      },
+                                      child: Text('Followers',
+                                          style: TextStyle(
+                                              color: dark
+                                                  ? Colors.white54
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12.0)),
+                                    ),
                                     SizedBox(
                                       width: 20.0,
                                     ),
-                                    Text('Following',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12.0)),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FollowingPage(user.uid)),
+                                        );
+                                      },
+                                      child: Text('Following',
+                                          style: TextStyle(
+                                              color: dark
+                                                  ? Colors.white54
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12.0)),
+                                    ),
                                   ],
                                 )
                               ],
@@ -133,6 +200,8 @@ class _YourProfileHeadState extends State<YourProfileHead> {
                     Text(
                       details.name,
                       style: TextStyle(
+                        fontFamily: 'kalam',
+                        color: dark ? Colors.white : Colors.black,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -147,6 +216,7 @@ class _YourProfileHeadState extends State<YourProfileHead> {
                     Text(
                       details.aboutMe,
                       style: TextStyle(
+                        color: dark ? Colors.white54 : Colors.black,
                         fontSize: 10.0,
                       ),
                     ),
@@ -157,8 +227,13 @@ class _YourProfileHeadState extends State<YourProfileHead> {
                 ),
                 Container(
                   child: FlatButton(
-                    child: Text('Edit Your Profile'),
-                    color: Colors.grey[100],
+                    child: Text(
+                      'Edit Your Profile',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    color: Color.fromARGB(255, 254, 91, 3),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -171,7 +246,7 @@ class _YourProfileHeadState extends State<YourProfileHead> {
                   padding: EdgeInsets.fromLTRB(0, 25.0, 0, 15.0),
                   child: Container(
                     height: 2.0,
-                    color: Colors.grey[200],
+                    color: Color.fromARGB(255, 240, 143, 110),
                   ),
                 ),
               ],

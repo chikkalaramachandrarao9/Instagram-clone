@@ -24,12 +24,7 @@ class _YourPostsDisplayState extends State<YourPostsDisplay> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<PostDetails> entries = snapshot.data;
-
-            for (int i = 0; i < entries.length; i++) {
-              print(entries[i].url);
-            }
-
-//            return Text('hello');
+//           return Text('hello');
 
             return Container(
               height: MediaQuery.of(context).size.height / 2.3,
@@ -38,8 +33,12 @@ class _YourPostsDisplayState extends State<YourPostsDisplay> {
                 padding: const EdgeInsets.all(8),
                 itemCount: entries.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return PostCard(entries[index].url, user.uid,
-                      entries[index].tag, entries[index].docid);
+                  return PostCard(
+                      entries[index].url,
+                      user.uid,
+                      entries[index].tag,
+                      entries[index].docid,
+                      entries[index].refid);
                 },
               ),
             );

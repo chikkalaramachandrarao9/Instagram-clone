@@ -14,6 +14,7 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
+  List<Follower> _followlist;
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -28,58 +29,72 @@ class _FeedState extends State<Feed> {
     return StreamBuilder<List<Follower>>(
         stream: _followdatabase.following,
         builder: (context, snapshot) {
-          List<Follower> _followlist = snapshot.data;
-          List<String> _following = [];
+          if (snapshot.hasData) {
+            _followlist = snapshot.data;
+            List<String> _following = [];
 
-          List<PostDetails> entries = [];
+            List<PostDetails> entries = [];
 
-          for (int i = 0; i < _followlist.length; i++) {
-            _following.add(_followlist[i].following);
-          }
+            for (int i = 0; i < _followlist.length; i++) {
+              _following.add(_followlist[i].following);
+            }
 
-          return Container(
-            height: MediaQuery.of(context).size.height / 1.3,
-            child: StreamBuilder<List<PostDetails>>(
-                stream: _postdatabase.posts,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<PostDetails> allposts = snapshot.data;
+            return Container(
+              height: MediaQuery.of(context).size.height / 1.3,
+              child: Column(
+                children: [
+                  StreamBuilder<List<PostDetails>>(
+                      stream: _postdatabase.posts,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<PostDetails> allposts = snapshot.data;
 
-                    for (int i = 0; i < allposts.length; i++) {
-                      if (_following.indexWhere((element) =>
-                              element.startsWith(allposts[i].uid)) !=
-                          -1) {
-                        entries.add(allposts[i]);
-                      }
-                    }
+                          for (int i = 0; i < allposts.length; i++) {
+                            if (_following.indexWhere((element) =>
+                                    element.startsWith(allposts[i].uid)) !=
+                                -1) {
+                              entries.add(allposts[i]);
+                            }
+                          }
                     entries.shuffle();
 
 //            return Text('hello');
 
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: entries.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return PostCard(entries[index].url, entries[index].uid,
-                            entries[index].tag, entries[index].docid);
-                      },
-                    );
-                  } else {
-                    return Text(
-                      'No Posts Yet',
-                      style: TextStyle(
-                          fontSize: 25.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                    );
-                  }
-                }),
-          );
+                          return Flexible(
+                            child: ListView.builder(
+//                        physics: NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              padding: const EdgeInsets.all(8),
+                              itemCount: entries.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return PostCard(
+                                    entries[index].url,
+                                    entries[index].uid,
+                                    entries[index].tag,
+                                    entries[index].docid,
+                                    entries[index].refid);
+                              },
+                            ),
+                          );
+                        } else {
+                          return Text(
+                            'No Posts Yet',
+                            style: TextStyle(
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          );
+                        }
+                      }),
+                ],
+              ),
+            );
+          } else {
+            return Text(
+              'Follow others to see their posts',
+              style: TextStyle(fontSize: 30.0, color: Colors.grey),
+            );
+          }
         });
   }
 }
-
-//                      addAutomaticKeepAlives: false,
-//                      addRepaintBoundaries: false,
-//                      addSemanticIndexes: false,
-//                      shrinkWrap: true,

@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:insta/models/comment.dart';
+import 'package:insta/models/notification_model.dart';
 
-class CommentDatabaseService {
-  String postId;
+class NotificationDatabaseService {
   String userId;
   String month, day, hour, minute, second, time;
-  CommentDatabaseService(this.postId, this.userId);
+  NotificationDatabaseService(this.userId);
 
-  final CollectionReference commentCollection =
-      FirebaseFirestore.instance.collection('comments');
+  final CollectionReference notificationCollection =
+      FirebaseFirestore.instance.collection('notifications');
 
-  Future updateCommentData(String comment) async {
+  Future updateNotification(
+      String notification, String triggerId, String type) async {
     DateTime dateTime = DateTime.now();
 
     if (dateTime.month < 10)
@@ -46,35 +46,36 @@ class CommentDatabaseService {
         minute +
         ':' +
         second;
-    DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('comments').doc();
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('notifications')
+        .doc('notif$userId')
+        .collection('notif$userId')
+        .doc();
     return await documentReference.set({
-      'userid': userId,
-      'postid': postId,
-      'comment': comment,
+      'triggerid': triggerId,
+      'notification': notification,
       'docId': documentReference.id,
       'time': time,
+      'type': type,
     });
   }
 
-  deleteComment(String id) async {
-    return await commentCollection.doc(id).delete();
-  }
-
-  List<Comment> _commentData(QuerySnapshot snapshot) {
+  List<NotifModel> _notifData(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return Comment(
-          postId: doc.get('postid') ?? '',
-          uid: doc.get('userid') ?? '',
-          comment: doc.get('comment'),
+      return NotifModel(
+          trigger: doc.get('triggerid') ?? '',
+          notification: doc.get('notification') ?? '',
+          type: doc.get('type') ?? '',
           docId: doc.id);
     }).toList();
   }
 
-  Stream<List<Comment>> get comments {
-    return commentCollection
-        .where('postid', isEqualTo: postId)
+  Stream<List<NotifModel>> get notifications {
+    return notificationCollection
+        .doc('notif$userId')
+        .collection('notif$userId')
+        .orderBy('time', descending: true)
         .snapshots()
-        .map(_commentData);
+        .map(_notifData);
   }
 }

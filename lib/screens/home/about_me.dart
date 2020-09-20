@@ -16,6 +16,8 @@ class AboutMe extends StatefulWidget {
 }
 
 class _AboutMeState extends State<AboutMe> {
+  bool dark;
+
   final namecntrl = TextEditingController();
   final aboutmecntrl = TextEditingController();
   bool loading = false;
@@ -47,6 +49,7 @@ class _AboutMeState extends State<AboutMe> {
 
   @override
   Widget build(BuildContext context) {
+    dark = Provider.of<bool>(context);
     final user = Provider.of<UserDetails>(context);
     UserDatabaseService _database = UserDatabaseService(uid: user.uid);
 
@@ -64,12 +67,21 @@ class _AboutMeState extends State<AboutMe> {
           url = details.dpurl;
 
           return Scaffold(
+            backgroundColor: dark
+                ? Color.fromARGB(255, 18, 18, 18)
+                : Color.fromARGB(255, 245, 246, 252),
             appBar: AppBar(
+              iconTheme: IconThemeData(
+                color: dark ? Colors.white : Color.fromARGB(255, 248, 90, 44),
+              ),
               title: Text(
                 'Edit',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: dark ? Colors.white : Colors.black,
+                ),
               ),
-              backgroundColor: Colors.limeAccent,
+              backgroundColor:
+                  dark ? Color.fromARGB(255, 39, 39, 39) : Colors.white,
             ),
             body: loading
                 ? spinkit3
@@ -95,10 +107,17 @@ class _AboutMeState extends State<AboutMe> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
+                            style: TextStyle(
+                                color: dark ? Colors.white : Colors.black),
                             controller: namecntrl,
                             decoration: InputDecoration(
                               hintText: 'Profile Name',
-                              fillColor: Colors.white,
+                              hintStyle: TextStyle(
+                                color: dark ? Colors.white : Colors.black,
+                              ),
+                              fillColor: dark
+                                  ? Color.fromARGB(255, 44, 44, 44)
+                                  : Colors.white,
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.black, width: 1.0)),
@@ -115,10 +134,17 @@ class _AboutMeState extends State<AboutMe> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
+                            style: TextStyle(
+                                color: dark ? Colors.white : Colors.black),
                             controller: aboutmecntrl,
                             decoration: InputDecoration(
                               hintText: 'About you',
-                              fillColor: Colors.white,
+                              hintStyle: TextStyle(
+                                color: dark ? Colors.white : Colors.black,
+                              ),
+                              fillColor: dark
+                                  ? Color.fromARGB(255, 44, 44, 44)
+                                  : Colors.white,
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.black, width: 1.0)),
@@ -133,10 +159,10 @@ class _AboutMeState extends State<AboutMe> {
                         ),
                         SizedBox(height: 20.0),
                         RaisedButton(
-                            color: Colors.lime[400],
+                            color: Color.fromARGB(255, 254, 91, 3),
                             child: Text(
                               'Save',
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () async {
                               print('pressed');

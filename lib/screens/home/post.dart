@@ -4,11 +4,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:insta/models/user.dart';
 import 'package:insta/services/database/postdatabase.dart';
 import 'package:provider/provider.dart';
 import 'package:insta/screens/shared/loading.dart';
+import 'package:path/path.dart';
+//import 'package:photofilters/photofilters.dart';
+//import 'package:image/image.dart' as imageLib;
 
 class Post extends StatefulWidget {
   @override
@@ -16,8 +18,12 @@ class Post extends StatefulWidget {
 }
 
 class _PostState extends State<Post> {
+  bool dark;
+
   File _imageFile;
   bool loading = false;
+
+//  List<Filter> filters = presetFiltersList;
 
   String url = "";
   String _uploadFileName = "";
@@ -33,25 +39,6 @@ class _PostState extends State<Post> {
     print("URL is $url");
     print('success');
   }
-
-//  Future<void> _cropImage() async {
-//    print('cropper');
-//    File cropped = await ImageCropper.cropImage(
-//      sourcePath: _imageFile.path,
-//      // ratioX: 1.0,
-//      // ratioY: 1.0,
-//      // maxWidth: 512,
-//      // maxHeight: 512,
-//
-////        toolbarColor: Colors.purple,
-////        toolbarWidgetColor: Colors.white,
-////        toolbarTitle: 'Crop It'
-//    );
-//
-//    setState(() {
-//      _imageFile = cropped ?? _imageFile;
-//    });
-//  }
 
   /// Select an image via gallery or camera
   Future<void> _pickImage(ImageSource source) async {
@@ -71,6 +58,7 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserDetails>(context);
+    dark = Provider.of<bool>(context);
 
     PostDatabaseService _databaseService = PostDatabaseService(uid: user.uid);
 
@@ -83,7 +71,7 @@ class _PostState extends State<Post> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   IconButton(
-                    color: Colors.blueGrey,
+                    color: Color.fromARGB(255, 254, 91, 3),
                     icon: Icon(
                       Icons.photo_camera,
                       size: 50.0,
@@ -91,7 +79,7 @@ class _PostState extends State<Post> {
                     onPressed: () => _pickImage(ImageSource.camera),
                   ),
                   IconButton(
-                    color: Colors.blueGrey,
+                    color: Color.fromARGB(255, 254, 91, 3),
                     icon: Icon(
                       Icons.photo_library,
                       size: 50.0,
@@ -105,31 +93,27 @@ class _PostState extends State<Post> {
               ),
               _imageFile != null
                   ? Container(
-                      color: Colors.grey[200],
+                      color: dark ? Colors.grey[800] : Colors.grey[200],
                       height: 300.0,
                       child: Image.file(_imageFile))
                   : Container(
-                      color: Colors.grey[200],
+                      color: dark ? Colors.grey[800] : Colors.grey[200],
                       height: 150.0,
                       child: Center(
-                          child:
-                              Text('Click the above icons to choose image!')),
+                          child: Text(
+                        'Click the above icons to choose image!',
+                        style: TextStyle(
+                            color: dark ? Colors.white : Colors.black),
+                      )),
                     ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  SizedBox(
-                    width: 50.0,
-                  ),
                   FlatButton(
-                    child: Icon(Icons.crop),
-//              onPressed: _cropImage,
-                    onPressed: () {},
-                  ),
-                  SizedBox(
-                    width: 50.0,
-                  ),
-                  FlatButton(
-                    child: Icon(Icons.clear),
+                    child: Icon(
+                      Icons.delete,
+                      color: dark ? Colors.white : Colors.black,
+                    ),
                     onPressed: _clear,
                   ),
                 ],
@@ -141,9 +125,14 @@ class _PostState extends State<Post> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: tagcontroller,
+                  style: TextStyle(color: dark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     hintText: 'Write about this!',
-                    fillColor: Colors.white,
+                    hintStyle: TextStyle(
+                      color: dark ? Colors.white : Colors.black,
+                    ),
+                    fillColor:
+                        dark ? Color.fromARGB(255, 44, 44, 44) : Colors.white,
                     border: OutlineInputBorder(
                         borderSide:
                             BorderSide(color: Colors.black, width: 1.0)),
@@ -156,24 +145,30 @@ class _PostState extends State<Post> {
                 ),
               ),
               RaisedButton(
-                child: Text('Post'),
+                color: Color.fromARGB(255, 248, 90, 44),
+                child: Text(
+                  'Post',
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () async {
-                  setState(() {
-                    loading = true;
-                  });
-                  await _uploadFile(_imageFile, _uploadFileName);
+                  if (_imageFile != null) {
+                    setState(() {
+                      loading = true;
+                    });
 
-                  await _databaseService.updateUserData(
-                      tagcontroller.text, url);
-                  _clear();
-                  tagcontroller.text = '';
-                  setState(() {
-                    loading = false;
-                  });
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('Saved Successfully'),
-                    duration: Duration(seconds: 3),
-                  ));
+                    await _uploadFile(_imageFile, _uploadFileName);
+                    await _databaseService.updatePostData(
+                        tagcontroller.text, url);
+                    _clear();
+                    tagcontroller.text = '';
+                    setState(() {
+                      loading = false;
+                    });
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text('Saved Successfully'),
+                      duration: Duration(seconds: 3),
+                    ));
+                  }
                 },
               ),
             ],
