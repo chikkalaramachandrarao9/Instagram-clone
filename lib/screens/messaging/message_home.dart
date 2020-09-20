@@ -15,7 +15,7 @@ class MessageHome extends StatefulWidget {
 }
 
 class _MessageHomeState extends State<MessageHome> {
-  List<Contact> contacts;
+  List<String> contacts = [];
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +65,19 @@ class _MessageHomeState extends State<MessageHome> {
           stream: _messageDatabaseService.contacts,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              contacts = snapshot.data;
+              List<Contact> temp = snapshot.data;
+              for (int i = 0; i < temp.length; i++) {
+                if (contacts != null) {
+                  if (!contacts.contains(temp[i].id)) contacts.add(temp[i].id);
+                } else {
+                  contacts.add(temp[i].id);
+                }
+              }
               return ListView.builder(
                 itemCount: contacts.length,
                 itemBuilder: (BuildContext context, int index) {
                   UserDatabaseService service =
-                      UserDatabaseService(uid: contacts[index].id);
+                      UserDatabaseService(uid: contacts[index]);
                   return StreamBuilder<UserProfileWithUid>(
                       stream: service.userData,
                       builder: (context, snapshot) {
