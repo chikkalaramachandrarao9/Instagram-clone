@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 
 const spinkit = Center(
   child: SpinKitRotatingCircle(
-    color: Colors.limeAccent,
+    color: Color.fromARGB(255, 248, 90, 44),
     size: 50.0,
   ),
 );
 
 const spinkit2 = Center(
   child: SpinKitChasingDots(
-    color: Colors.limeAccent,
+    color: Color.fromARGB(255, 248, 90, 44),
     size: 50.0,
   ),
 );
 
 const spinkit3 = Center(
   child: SpinKitDoubleBounce(
-    color: Colors.limeAccent,
+    color: Color.fromARGB(255, 248, 90, 44),
   ),
 );

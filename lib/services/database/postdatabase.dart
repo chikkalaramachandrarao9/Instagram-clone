@@ -62,14 +62,6 @@ class PostDatabaseService {
     await postCollection.doc(id).delete();
   }
 
-//  PostDetails _postFromSnapshot(DocumentSnapshot snapshot) {
-//    return PostDetails(
-//        uid: snapshot.get('uid'),
-//        tag: snapshot.get('tag'),
-//        docid: snapshot.get('postid'),
-//        url: snapshot.get('url'));
-//  }
-
   List<PostDetails> _postListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return PostDetails(

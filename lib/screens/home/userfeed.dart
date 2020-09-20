@@ -56,13 +56,10 @@ class _FeedState extends State<Feed> {
                               entries.add(allposts[i]);
                             }
                           }
-                    entries.shuffle();
-
-//            return Text('hello');
+                          entries.shuffle();
 
                           return Flexible(
                             child: ListView.builder(
-//                        physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.vertical,
                               padding: const EdgeInsets.all(8),
                               itemCount: entries.length,

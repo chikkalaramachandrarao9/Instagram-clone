@@ -58,10 +58,6 @@ class _AboutMeState extends State<AboutMe> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           UserProfileWithUid details = snapshot.data;
-
-//          aboutmecntrl.text = details.aboutMe;
-//          namecntrl.text = details.name;
-
           namecntrl.text = details.name;
           aboutmecntrl.text = details.aboutMe;
           url = details.dpurl;

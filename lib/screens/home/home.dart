@@ -60,7 +60,6 @@ class _HomeState extends State<Home> {
         ),
         elevation: 4.0,
         backgroundColor: dark ? Color.fromARGB(255, 39, 39, 39) : Colors.white,
-//          backgroundColor: Colors.white,
         title: Text(
           _titles[_page],
           style: TextStyle(
@@ -83,7 +82,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
               color: dark ? Color.fromARGB(255, 39, 39, 39) : Colors.white,
-//                color: Colors.white,
               label: Text(' '),
               onPressed: () {
                 Navigator.push(context,

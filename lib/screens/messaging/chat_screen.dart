@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:insta/models/contact.dart';
 import 'package:insta/models/message.dart';
 import 'package:insta/models/user.dart';
 import 'package:insta/models/userdetails.dart';

@@ -8,9 +8,6 @@ import 'package:insta/models/user.dart';
 import 'package:insta/services/database/postdatabase.dart';
 import 'package:provider/provider.dart';
 import 'package:insta/screens/shared/loading.dart';
-import 'package:path/path.dart';
-//import 'package:photofilters/photofilters.dart';
-//import 'package:image/image.dart' as imageLib;
 
 class Post extends StatefulWidget {
   @override
@@ -22,8 +19,6 @@ class _PostState extends State<Post> {
 
   File _imageFile;
   bool loading = false;
-
-//  List<Filter> filters = presetFiltersList;
 
   String url = "";
   String _uploadFileName = "";
@@ -40,7 +35,6 @@ class _PostState extends State<Post> {
     print('success');
   }
 
-  /// Select an image via gallery or camera
   Future<void> _pickImage(ImageSource source) async {
     File selected = await ImagePicker.pickImage(source: source);
 
@@ -50,7 +44,6 @@ class _PostState extends State<Post> {
     });
   }
 
-  /// Remove image
   void _clear() {
     setState(() => _imageFile = null);
   }
