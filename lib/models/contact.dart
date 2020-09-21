@@ -1,5 +1,5 @@
 class Contact {
   final String id;
-
-  Contact({this.id});
+  final int unseen;
+  Contact({this.id, this.unseen});
 }

@@ -247,7 +247,10 @@ class _ProfileHeadState extends State<ProfileHead> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 FlatButton(
-                                  child: Text('Message'),
+                                  child: Text(
+                                    'Message',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   color: Color.fromARGB(255, 248, 90, 44),
                                   onPressed: () {
                                     Navigator.push(

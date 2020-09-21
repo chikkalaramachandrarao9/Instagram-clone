@@ -59,18 +59,26 @@ class _FeedState extends State<Feed> {
                           entries.shuffle();
 
                           return Flexible(
-                            child: ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              padding: const EdgeInsets.all(8),
-                              itemCount: entries.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return PostCard(
-                                    entries[index].url,
-                                    entries[index].uid,
-                                    entries[index].tag,
-                                    entries[index].docid,
-                                    entries[index].refid);
+                            child: RefreshIndicator(
+                              onRefresh: () async {
+                                await Future.delayed(Duration(seconds: 1));
+                                setState(() {
+                                  entries.shuffle();
+                                });
                               },
+                              child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                padding: const EdgeInsets.all(8),
+                                itemCount: entries.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return PostCard(
+                                      entries[index].url,
+                                      entries[index].uid,
+                                      entries[index].tag,
+                                      entries[index].docid,
+                                      entries[index].refid);
+                                },
+                              ),
                             ),
                           );
                         } else {

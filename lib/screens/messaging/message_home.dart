@@ -15,8 +15,6 @@ class MessageHome extends StatefulWidget {
 }
 
 class _MessageHomeState extends State<MessageHome> {
-  List<String> contacts = [];
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserDetails>(context);
@@ -66,18 +64,12 @@ class _MessageHomeState extends State<MessageHome> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<Contact> temp = snapshot.data;
-              for (int i = 0; i < temp.length; i++) {
-                if (contacts != null) {
-                  if (!contacts.contains(temp[i].id)) contacts.add(temp[i].id);
-                } else {
-                  contacts.add(temp[i].id);
-                }
-              }
+
               return ListView.builder(
-                itemCount: contacts.length,
+                itemCount: temp.length,
                 itemBuilder: (BuildContext context, int index) {
                   UserDatabaseService service =
-                      UserDatabaseService(uid: contacts[index]);
+                      UserDatabaseService(uid: temp[index].id);
                   return StreamBuilder<UserProfileWithUid>(
                       stream: service.userData,
                       builder: (context, snapshot) {
@@ -92,6 +84,10 @@ class _MessageHomeState extends State<MessageHome> {
                               ),
                               child: ListTile(
                                 onTap: () async {
+                                  await MessageDatabaseService(
+                                          senderId: user.uid,
+                                          receiverId: snapshot.data.uid)
+                                      .deleteUnseen();
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -109,6 +105,15 @@ class _MessageHomeState extends State<MessageHome> {
                                       color: dark ? Colors.white : Colors.black,
                                       fontFamily: 'kalam',
                                       fontWeight: FontWeight.w600),
+                                ),
+                                subtitle: Text(
+                                  temp[index].unseen != 0
+                                      ? temp[index].unseen.toString() +
+                                          ' unseen messages'
+                                      : '',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 131, 225, 163),
+                                  ),
                                 ),
                               ),
                             ),

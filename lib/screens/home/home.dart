@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: SingleChildScrollView(child: _list[_page]),
+      body: _list[_page],
       drawer: Drawer(
         child: Container(
           color: dark ? Color.fromARGB(255, 23, 36, 44) : Colors.white,

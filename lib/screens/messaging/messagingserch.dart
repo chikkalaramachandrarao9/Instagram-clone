@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:insta/models/user.dart';
 import 'package:insta/models/userdetails.dart';
 import 'package:insta/screens/messaging/chat_screen.dart';
+import 'package:insta/services/database/Message_database.dart';
 import 'package:provider/provider.dart';
 
 class MessageSearch extends SearchDelegate {
@@ -76,6 +77,9 @@ class MessageSearch extends SearchDelegate {
             style: TextStyle(color: dark ? Colors.white : Colors.black),
           ),
           onTap: () async {
+            await MessageDatabaseService(
+                    senderId: user.uid, receiverId: suggestionlist[index].uid)
+                .deleteUnseen();
             ind = index;
 //          showResults(context);
 

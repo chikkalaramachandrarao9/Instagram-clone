@@ -30,8 +30,6 @@ class _PostsDisplayState extends State<PostsDisplay> {
               print(entries[i].url);
             }
 
-//            return Text('hello');
-
             return Container(
               height: MediaQuery.of(context).size.height / 2.0,
               child: ListView.builder(

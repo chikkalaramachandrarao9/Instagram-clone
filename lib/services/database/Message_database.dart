@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:insta/models/message.dart';
 import 'package:insta/models/contact.dart';
 
@@ -25,9 +26,11 @@ class MessageDatabaseService {
         if (!doc.exists) {
           FirebaseFirestore.instance
               .collection('contact$senderId')
-              .doc(uniqueId)
+              .doc(receiverId)
               .set({
             'id1': receiverId,
+            'unseen': 0,
+            'time': time,
           });
         }
       });
@@ -45,7 +48,20 @@ class MessageDatabaseService {
           FirebaseFirestore.instance
               .collection('contact$receiverId')
               .doc(senderId)
-              .set({'id1': senderId});
+              .set({
+            'id1': senderId,
+            'unseen': 1,
+            'time': time,
+          });
+        } else {
+          FirebaseFirestore.instance
+              .collection('contact$receiverId')
+              .doc(senderId)
+              .set({
+            'id1': senderId,
+            'unseen': doc.get('unseen') + 1,
+            'time': time,
+          });
         }
       });
     } catch (e) {
@@ -68,6 +84,23 @@ class MessageDatabaseService {
         : receiverId + senderId;
 
     await FirebaseFirestore.instance.collection(uniqueId).doc(id).delete();
+  }
+
+  deleteUnseen() async {
+    await FirebaseFirestore.instance
+        .collection('contact$senderId')
+        .doc(receiverId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        FirebaseFirestore.instance
+            .collection('contact$senderId')
+            .doc(receiverId)
+            .update({
+          'unseen': 0,
+        });
+      }
+    });
   }
 
   List<Message> _messagesData(QuerySnapshot snapshot) {
@@ -96,6 +129,7 @@ class MessageDatabaseService {
     return snapshot.docs.map((doc) {
       return Contact(
         id: doc.get('id1') ?? '',
+        unseen: doc.get('unseen'),
       );
     }).toList();
   }
@@ -103,6 +137,7 @@ class MessageDatabaseService {
   Stream<List<Contact>> get contacts {
     return FirebaseFirestore.instance
         .collection('contact$senderId')
+        .orderBy('time', descending: true)
         .snapshots()
         .map(_contactsData);
   }

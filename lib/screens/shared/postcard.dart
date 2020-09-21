@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:insta/models/Like.dart';
 import 'package:insta/models/user.dart';
 import 'package:insta/models/userdetails.dart';
+import 'package:insta/screens/home/profile.dart';
 import 'package:insta/screens/shared/comment_screen.dart';
 import 'package:insta/screens/shared/likes.dart';
 import 'package:insta/screens/shared/loading.dart';
@@ -64,30 +65,53 @@ class _PostCardState extends State<PostCard> {
                               details = snapshot.data;
                               return Row(
                                 children: <Widget>[
-                                  Container(
-                                    height: 40.0,
-                                    width: 40.0,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: details.dpurl != null
-                                            ? NetworkImage(details.dpurl)
-                                            : Image.asset('images/logo.jpg'),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              Profile(snapshot.data.uid),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 40.0,
+                                      width: 40.0,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: details.dpurl != null
+                                              ? NetworkImage(details.dpurl)
+                                              : Image.asset('images/logo.jpg'),
+                                        ),
                                       ),
                                     ),
                                   ),
                                   SizedBox(
                                     width: 10.0,
                                   ),
-                                  Text(
-                                    details.name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'kalam',
-                                      color: dark ? Colors.white : Colors.black,
+                                  GestureDetector(
+                                    child: Text(
+                                      details.name,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'kalam',
+                                        color:
+                                            dark ? Colors.white : Colors.black,
+                                      ),
                                     ),
-                                  )
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              Profile(snapshot.data.uid),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ],
                               );
                             } else {

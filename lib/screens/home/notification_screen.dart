@@ -29,7 +29,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             _list = snapshot.data;
-            print(snapshot.data);
             return Container(
               height: MediaQuery.of(context).size.height / 1.3,
               child: Column(
