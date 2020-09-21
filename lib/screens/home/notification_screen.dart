@@ -28,6 +28,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         stream: _notifDatabaseService.notifications,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            if(snapshot.data.length != 0){
             _list = snapshot.data;
             return Container(
               height: MediaQuery.of(context).size.height / 1.3,
@@ -80,16 +81,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                 ],
               ),
-            );
-          } else {
-            return Center(
-              child: Container(
-                child: Text(
-                  'No Notifications',
-                  style: TextStyle(fontSize: 20.0),
+            );}
+            else{
+             return Center(
+                child: Container(
+                  child: Text(
+                    'No Notifications',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
                 ),
-              ),
-            );
+              );
+            }
+          } else {
+            return Text('');
           }
         });
   }

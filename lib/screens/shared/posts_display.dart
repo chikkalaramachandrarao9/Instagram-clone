@@ -24,35 +24,46 @@ class _PostsDisplayState extends State<PostsDisplay> {
         stream: _postdatabase.userPosts,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<PostDetails> entries = snapshot.data;
+            if(snapshot.data.length !=0) {
+              List<PostDetails> entries = snapshot.data;
 
-            for (int i = 0; i < entries.length; i++) {
-              print(entries[i].url);
+              for (int i = 0; i < entries.length; i++) {
+                print(entries[i].url);
+              }
+
+              return Container(
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height / 2.0,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(8),
+                  itemCount: entries.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return PostCard(
+                        entries[index].url,
+                        widget.uid,
+                        entries[index].tag,
+                        entries[index].docid,
+                        entries[index].refid);
+                  },
+                ),
+              );
             }
-
-            return Container(
-              height: MediaQuery.of(context).size.height / 2.0,
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(8),
-                itemCount: entries.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return PostCard(
-                      entries[index].url,
-                      widget.uid,
-                      entries[index].tag,
-                      entries[index].docid,
-                      entries[index].refid);
-                },
-              ),
-            );
+            else{
+              return Text(
+                'No Posts Yet',
+                style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey),
+              );
+            }
           } else {
             return Text(
-              'No Posts Yet',
-              style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey),
+              ''
+
             );
           }
         });

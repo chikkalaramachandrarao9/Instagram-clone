@@ -30,6 +30,7 @@ class _FeedState extends State<Feed> {
         stream: _followdatabase.following,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            if(snapshot.data.length != 0){
             _followlist = snapshot.data;
             List<String> _following = [];
 
@@ -93,11 +94,16 @@ class _FeedState extends State<Feed> {
                       }),
                 ],
               ),
-            );
+            );}
+            else{
+              return Text(
+                'Follow others to see their posts',
+                style: TextStyle(fontSize: 30.0, color: Colors.grey),
+              );
+            }
           } else {
             return Text(
-              'Follow others to see their posts',
-              style: TextStyle(fontSize: 30.0, color: Colors.grey),
+              ''
             );
           }
         });

@@ -23,6 +23,7 @@ class _YourPostsDisplayState extends State<YourPostsDisplay> {
         stream: _postdatabase.userPosts,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            if(snapshot.data.length != 0){
             List<PostDetails> entries = snapshot.data;
 //           return Text('hello');
 
@@ -41,14 +42,19 @@ class _YourPostsDisplayState extends State<YourPostsDisplay> {
                       entries[index].refid);
                 },
               ),
-            );
+            );}
+            else{
+              return Text(
+                'No Posts Yet',
+                style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey),
+              );
+            }
           } else {
             return Text(
-              'No Posts Yet',
-              style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey),
+              ''
             );
           }
         });
