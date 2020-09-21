@@ -80,7 +80,7 @@ class _AboutMeState extends State<AboutMe> {
                   dark ? Color.fromARGB(255, 39, 39, 39) : Colors.white,
             ),
             body: loading
-                ? spinkit3
+                ? spinkit
                 : Container(
                     child: Column(
                       children: <Widget>[

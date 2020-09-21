@@ -57,7 +57,7 @@ class _PostState extends State<Post> {
 
     // TODO: implement build
     return loading
-        ? spinkit3
+        ? spinkit
         : Column(
             children: <Widget>[
               Row(
