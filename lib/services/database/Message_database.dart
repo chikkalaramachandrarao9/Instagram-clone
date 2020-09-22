@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:insta/models/message.dart';
 import 'package:insta/models/contact.dart';
 
@@ -138,6 +137,14 @@ class MessageDatabaseService {
     return FirebaseFirestore.instance
         .collection('contact$senderId')
         .orderBy('time', descending: true)
+        .snapshots()
+        .map(_contactsData);
+  }
+
+  Stream<List<Contact>> get shouldNotify {
+    return FirebaseFirestore.instance
+        .collection('contact$senderId')
+        .where('unseen', isGreaterThan: 0)
         .snapshots()
         .map(_contactsData);
   }

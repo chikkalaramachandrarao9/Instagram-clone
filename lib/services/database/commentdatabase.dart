@@ -46,8 +46,11 @@ class CommentDatabaseService {
         minute +
         ':' +
         second;
-    DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('comments').doc();
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('comments')
+        .doc(postId)
+        .collection('comments')
+        .doc();
     return await documentReference.set({
       'userid': userId,
       'postid': postId,
@@ -73,7 +76,9 @@ class CommentDatabaseService {
 
   Stream<List<Comment>> get comments {
     return commentCollection
-        .where('postid', isEqualTo: postId)
+        .doc(postId)
+        .collection('comments')
+        .orderBy('time')
         .snapshots()
         .map(_commentData);
   }

@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:insta/models/contact.dart';
 import 'package:insta/models/user.dart';
 import 'package:insta/models/userdetails.dart';
 import 'package:insta/screens/home/notification_screen.dart';
 import 'package:insta/screens/home/post.dart';
 import 'package:insta/services/auth_service.dart';
+import 'package:insta/services/database/Message_database.dart';
 import 'package:provider/provider.dart';
 import 'package:insta/services/database/user_database.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -72,22 +74,66 @@ class _HomeState extends State<Home> {
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 8.0, 4.0, 8.0),
-            child: FlatButton.icon(
-              icon: Transform.rotate(
-                angle: 325 * pi / 180,
-                child: Icon(
-                  Icons.send,
-                  color: dark ? Colors.white : Color.fromARGB(255, 248, 90, 44),
-                  size: 30.0,
-                ),
-              ),
-              color: dark ? Color.fromARGB(255, 39, 39, 39) : Colors.white,
-              label: Text(' '),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MessageHome()));
-              },
-            ),
+            child: StreamBuilder<List<Contact>>(
+                stream:
+                    MessageDatabaseService(senderId: user.uid, receiverId: '1')
+                        .shouldNotify,
+                builder: (context, snapshot) {
+                  bool flag = false;
+                  if (snapshot.hasData && snapshot.data.length > 0) flag = true;
+                  return Stack(
+                    children: [
+                      IconButton(
+                        icon: Transform.rotate(
+                          angle: 325 * pi / 180,
+                          child: Icon(
+                            Icons.send,
+                            color: dark
+                                ? Colors.white
+                                : Color.fromARGB(255, 248, 90, 44),
+                            size: 30.0,
+                          ),
+                        ),
+                        color: dark
+                            ? Color.fromARGB(255, 39, 39, 39)
+                            : Colors.white,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MessageHome()));
+                        },
+                      ),
+                      flag
+                          ? Positioned(
+                              right: 11,
+                              top: 11,
+                              child: Container(
+                                padding: EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: dark
+                                      ? Color.fromARGB(255, 248, 90, 44)
+                                      : Colors.black,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                constraints: BoxConstraints(
+                                  minHeight: 14,
+                                  minWidth: 14,
+                                ),
+                                child: Text(
+                                  '1',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            )
+                          : new Container()
+                    ],
+                  );
+                }),
           ),
         ],
       ),
